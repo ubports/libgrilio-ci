@@ -5,8 +5,9 @@ pipeline {
       steps {
         git 'https://git.merproject.org/mer-core/libgrilio.git'
         sh '''
+        sed -i -e 's/libglibutil/libglibutil-dev/' debian/control
         sed -i -e '0,/unstable/ s//xenial/' debian/changelog
-        /usr/bin/build-source.sh
+        SKIP_GIT_CLEANUP=true /usr/bin/build-source.sh
         '''
         stash(name: 'source', includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt')
         cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
